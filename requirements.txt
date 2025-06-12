@@ -1,4 +1,4 @@
-pandas
+pandas==2.1.4
 great_expectations 
 requests
 selenium
@@ -6,3 +6,6 @@ webdriver-manager
 sqlalchemy
 psycopg2-binary
 python-dotenv
+kaggle
+apache-airflow[celery]==3.0.2
+-c https://raw.githubusercontent.com/apache/airflow/constraints-3.0.2/constraints-3.9.txt

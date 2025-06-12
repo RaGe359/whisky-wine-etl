@@ -1,20 +1,17 @@
-# Python
-*.pyc
 __pycache__/
-.env/
+*.py[cod]
+*$py.class
+
+venv/
+env/
+ENV/
+.venv/
+.env
+
 .vscode/
-
-# Logs
-*.log
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# macOS & Windows system files
 .DS_Store
-Thumbs.db
 
-# Airflow
-airflow.db
-airflow.cfg
-logs/
+# Logs and databases
+*.log
+*.sqlite3
+
