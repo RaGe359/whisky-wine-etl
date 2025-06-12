@@ -114,7 +114,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    command: bash -c "pip install kaggle && airflow webserver"
     ports:
       - "8080:8080"
     healthcheck:
@@ -128,10 +128,14 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    volumes:
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\dags:/opt/airflow/dags:ro
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\requirements.txt:/requirements.txt
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\config\kaggle.json:/home/airflow/.kaggle/kaggle.json:ro
 
   airflow-scheduler:
     <<: *airflow-common
-    command: scheduler
+    command: bash -c "pip install kaggle && airflow scheduler"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
@@ -143,10 +147,14 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    volumes:
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\dags:/opt/airflow/dags:ro
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\requirements.txt:/requirements.txt
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\config\kaggle.json:/home/airflow/.kaggle/kaggle.json:ro
 
   airflow-worker:
     <<: *airflow-common
-    command: celery worker
+    command: bash -c "pip install kaggle && airflow celery worker"
     healthcheck:
       test:
         - "CMD-SHELL"
@@ -163,6 +171,10 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    volumes:
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\dags:/opt/airflow/dags:ro
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\requirements.txt:/requirements.txt
+      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\config\kaggle.json:/home/airflow/.kaggle/kaggle.json:ro
 
   airflow-triggerer:
     <<: *airflow-common
