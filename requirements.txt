@@ -1,0 +1,8 @@
+pandas
+great_expectations 
+requests
+selenium
+webdriver-manager
+sqlalchemy
+psycopg2-binary
+python-dotenv
