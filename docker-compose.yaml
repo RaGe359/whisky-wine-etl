@@ -61,6 +61,7 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    DISABLE_PANDERA_IMPORT_WARNING: 'True'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
@@ -74,6 +75,9 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/config/kaggle.json:/home/airflow/.kaggle/kaggle.json
+    - ${AIRFLOW_PROJ_DIR:-.}/requirements.txt:/requirements.txt
+    - ${AIRFLOW_PROJ_DIR:-.}/data:/opt/airflow/data
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -114,7 +118,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: bash -c "pip install kaggle && airflow webserver"
+    command: bash -c "pip install kaggle pandera && airflow webserver"
     ports:
       - "8080:8080"
     healthcheck:
@@ -128,14 +132,10 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    volumes:
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\dags:/opt/airflow/dags:ro
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\requirements.txt:/requirements.txt
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\config\kaggle.json:/home/airflow/.kaggle/kaggle.json:ro
 
   airflow-scheduler:
     <<: *airflow-common
-    command: bash -c "pip install kaggle && airflow scheduler"
+    command: bash -c "pip install kaggle pandera && airflow scheduler"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
@@ -147,14 +147,10 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    volumes:
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\dags:/opt/airflow/dags:ro
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\requirements.txt:/requirements.txt
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\config\kaggle.json:/home/airflow/.kaggle/kaggle.json:ro
 
   airflow-worker:
     <<: *airflow-common
-    command: bash -c "pip install kaggle && airflow celery worker"
+    command: bash -c "pip install kaggle pandera && airflow celery worker"
     healthcheck:
       test:
         - "CMD-SHELL"
@@ -171,10 +167,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    volumes:
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\dags:/opt/airflow/dags:ro
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\requirements.txt:/requirements.txt
-      - D:\Games\wproject\whisky-wine-airflow\whisky-wine-etl\config\kaggle.json:/home/airflow/.kaggle/kaggle.json:ro
+
 
   airflow-triggerer:
     <<: *airflow-common
