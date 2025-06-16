@@ -104,6 +104,19 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
   redis:
     image: redis:latest
     expose:
@@ -118,7 +131,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: bash -c "pip install kaggle pandera && airflow webserver"
+    command: bash -c "pip install kaggle 'pandera>=0.22.1' && airflow webserver"
     ports:
       - "8080:8080"
     healthcheck:
@@ -135,7 +148,7 @@ services:
 
   airflow-scheduler:
     <<: *airflow-common
-    command: bash -c "pip install kaggle pandera && airflow scheduler"
+    command: bash -c "pip install kaggle 'pandera>=0.22.1' && airflow scheduler"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
@@ -150,7 +163,7 @@ services:
 
   airflow-worker:
     <<: *airflow-common
-    command: bash -c "pip install kaggle pandera && airflow celery worker"
+    command: bash -c "pip install kaggle 'pandera>=0.22.1' && airflow celery worker"
     healthcheck:
       test:
         - "CMD-SHELL"
@@ -279,3 +292,4 @@ services:
 
 volumes:
   postgres-db-volume:
+  pgadmin_data:

@@ -4,10 +4,10 @@ This project uses Docker to set up an Airflow pipeline to compare alternative in
 
 ## Goals
 
-- Scrape whisky auction listings; link - https://whiskyauctioneer.com/
-- Analyze wine dataset; Taken from Kaggle instead of an API; link - https://www.kaggle.com/datasets/zynicide/wine-reviews
-- Use Postgres for storage
+- Scrape whisky auction listings from https://whiskyauctioneer.com/
+- Analyze wine dataset taken from Kaggle API
 - Orchestrate with Airflow
+- Use Postgres for storage
 
 ## Structure
 
